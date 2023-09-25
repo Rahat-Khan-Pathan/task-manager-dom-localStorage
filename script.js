@@ -16,7 +16,9 @@ const getAllTasksLocal = () => {
         if (localStorage.getItem("task-list")) {
             allTasks = JSON.parse(localStorage.getItem("task-list"));
         }
-        console.log(allTasks);
+        if (localStorage.getItem("task-cur")) {
+            cur = JSON.parse(localStorage.getItem("task-cur"));
+        }
         resolve();
     });
     return prom;
@@ -25,12 +27,11 @@ getAllTasksLocal().then(load);
 const addTaskLocal = (task, id) => {
     allTasks.push({ task: task, id: id });
     localStorage.setItem("task-list", JSON.stringify(allTasks));
-    console.log(allTasks);
+    localStorage.setItem("task-cur", JSON.stringify(cur + 1));
 };
 const deleteTaskLocal = (id) => {
     allTasks = allTasks.filter((t) => t.id !== id);
     localStorage.setItem("task-list", JSON.stringify(allTasks));
-    console.log(allTasks);
 };
 const add = () => {
     const input = document.getElementById("input");
@@ -46,7 +47,6 @@ const remove = (id) => {
 const edit = (id) => {
     document.getElementById(`input-${id}`).style.display = "block";
     document.getElementById(`p-${id}`).style.display = "none";
-    console.log(id);
     const ts = allTasks.find((t) => t.id == id);
     document.getElementById(`input-${id}`).setAttribute("value", ts.task);
 };
@@ -60,7 +60,6 @@ const set = (id) => {
     localStorage.setItem("task-list", JSON.stringify(allTasks));
     document.getElementById(`input-${id}`).style.display = "none";
     document.getElementById(`p-${id}`).style.display = "block";
-    console.log(allTasks);
     load();
 };
 const show = (task, i) => {
